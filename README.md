@@ -1,119 +1,99 @@
-<h1>ExpNo 4 : Implement A* search algorithm for a Graph</h1> 
-<h3>Name:       </h3>
-<h3>Register Number:           </h3>
+<h1>ExpNo 5 : Implement Simple Hill Climbing Algorithm</h1> 
+<h3>Name: sindhuja I           </h3>
+<h3>Register Number: 212224060251          </h3>
 <H3>Aim:</H3>
-<p>To ImplementA * Search algorithm for a Graph using Python 3.</p>
-<H3>Algorithm:</H3>
+<p>Implement Simple Hill Climbing Algorithm and Generate a String by Mutating a Single Character at each iteration </p>
+<h2> Theory: </h2>
+<p>Hill climbing is a variant of Generate and test in which feedback from test procedure is used to help the generator decide which direction to move in search space.
+Feedback is provided in terms of heuristic function
+</p>
 
-``````
-// A* Search Algorithm
-1.  Initialize the open list
-2.  Initialize the closed list
-    put the starting node on the open 
-    list (you can leave its f at zero)
 
-3.  while the open list is not empty
-    a) find the node with the least f on 
-       the open list, call it "q"
+<h2>Algorithm:</h2>
+<p>
+<ol>
+ <li> Evaluate the initial state.If it is a goal state then return it and quit. Otherwise, continue with initial state as current state.</li> 
+<li>Loop until a solution is found or there are no new operators left to be applied in current state:
+<ul><li>Select an operator that has not yet been applied to the current state and apply it to produce a new state</li>
+<li>Evaluate the new state:
+  <ul>
+<li>if it is a goal state, then return it and quit</li>
+<li>if it is not a goal state but better than current state then make new state as current state</li>
+<li>if it is not better than current state then continue in the loop</li>
+    </ul>
+</li>
+</ul>
+</li>
+</ol>
 
-    b) pop q off the open list
-  
-    c) generate q's 8 successors and set their 
-       parents to q
-   
-    d) for each successor
-        i) if successor is the goal, stop search
-        
-        ii) else, compute both g and h for successor
-          successor.g = q.g + distance between 
-                              successor and q
-          successor.h = distance from goal to 
-          successor (This can be done using many 
-          ways, we will discuss three heuristics- 
-          Manhattan, Diagonal and Euclidean 
-          Heuristics)
-          
-          successor.f = successor.g + successor.h
-
-        iii) if a node with the same position as 
-            successor is in the OPEN list which has a 
-           lower f than successor, skip this successor
-
-        iV) if a node with the same position as 
-            successor  is in the CLOSED list which has
-            a lower f than successor, skip this successor
-            otherwise, add  the node to the open list
-     end (for loop)
-  
-    e) push q on the closed list
-    end (while loop)
-
-``````
-
+</p>
 <hr>
-<h2>Sample Graph I</h2>
-<hr>
+<h3> Steps Applied:</h3>
+<h3>Step-1</h3>
+<p> Generate Random String of the length equal to the given String</p>
+<h3>Step-2</h3>
+<p>Mutate the randomized string each character at a time</p>
+<h3>Step-3</h3>
+<p> Evaluate the fitness function or Heuristic Function</p>
+<h3>Step-4:</h3>
+<p> Lopp Step -2 and Step-3  until we achieve the score to be Zero to achieve Global Minima.</p>
 
-![image](https://github.com/natsaravanan/19AI405FUNDAMENTALSOFARTIFICIALINTELLIGENCE/assets/87870499/b1377c3f-011a-4c0f-a843-516842ae056a)
+## PROGRAM
+```
+import random
+import string
 
-<hr>
-<h2>Sample Input</h2>
-<hr>
-10 14 <br>
-A B 6 <br>
-A F 3 <br>
-B D 2 <br>
-B C 3 <br>
-C D 1 <br>
-C E 5 <br>
-D E 8 <br>
-E I 5 <br>
-E J 5 <br>
-F G 1 <br>
-G I 3 <br>
-I J 3 <br>
-F H 7 <br>
-I H 2 <br>
-A 10 <br>
-B 8 <br>
-C 5 <br>
-D 7 <br>
-E 3 <br>
-F 6 <br>
-G 5 <br>
-H 3 <br>
-I 1 <br>
-J 0 <br>
-<hr>
-<h2>Sample Output</h2>
-<hr>
-Path found: ['A', 'F', 'G', 'I', 'J']
+def fitness(candidate, target):
+    return sum(abs(ord(candidate[i]) - ord(target[i])) for i in range(len(target)))
 
+def mutate(parent):
+    idx = random.randrange(len(parent))
+    new_char = random.choice(string.printable[:95])
+    return parent[:idx] + new_char + parent[idx + 1:]
 
-<hr>
-<h2>Sample Graph II</h2>
-<hr>
+def hill_climb(target):
+    current = ''.join(random.choice(string.printable[:95]) for _ in range(len(target)))
+    current_score = fitness(current, target)
+    while True:
+        neighbor = mutate(current)
+        neighbor_score = fitness(neighbor, target)
+        if neighbor_score <= current_score:
+            current, current_score = neighbor, neighbor_score
+            print(f"Score: {current_score} Solution : {current}")
+        if current_score == 0:
+            break
+    return current
 
-![image](https://github.com/natsaravanan/19AI405FUNDAMENTALSOFARTIFICIALINTELLIGENCE/assets/87870499/acbb09cb-ed39-48e5-a59b-2f8d61b978a3)
+target_string = "Artificial Intelligence"
+solution = hill_climb(target_string)
+print("\nFinal Solution:", solution)
 
+```
+<hr>
+<h2>Sample Input and Output</h2>
+<h2>Sample String:</h2> Artificial Intelligence
+<h2>Sample Output:</h2>
+Score: 643  Solution :  8RzF:oG ]%;CPORRMe!zGvk<br>
+Score: 609  Solution :  8RzF:oG ]%;CPqRRMe!zGvk<br>
+Score: 604  Solution :  8RzF:oG ]%;CPqRRMe!zGqk<br>
+Score: 594  Solution :  8RzF:oG ]%;CPqRRWe!zGqk<br>
+Score: 551  Solution :  8RzF:oGK]%;CPqRRWe!zGqk<br>
+Score: 551  Solution :  8RzF:oGK]%;CPqRRWe!zGqk<br>
+Score: 551  Solution :  8RzF:oGK]%;CPqRRWe!zGqk<br>
+Score: 551  Solution :  8RzF:oGK]%;CPqRRWe!zGqk<br>
+Score: 551  Solution :  8RzF:oGK]%;CPqRRWe!zGqk<br>
+....................................................<br>
+..................................................<br>
+................................................<br>
+Score: 1  Solution :  Artificial Intelligencf<br>
+Score: 1  Solution :  Artificial Intelligencf<br>
+Score: 1  Solution :  Artificial Intelligencf<br>
+Score: 1  Solution :  Artificial Intelligencf<br>
+Score: 0  Solution :  Artificial Intelligence<br>
 
-<hr>
-<h2>Sample Input</h2>
-<hr>
-6 6 <br>
-A B 2 <br>
-B C 1 <br>
-A E 3 <br>
-B G 9 <br>
-E D 6 <br>
-D G 1 <br>
-A 11 <br>
-B 6 <br>
-C 99 <br>
-E 7 <br>
-D 1 <br>
-G 0 <br>
-<hr>
-<h2>Sample Output</h2>
-<hr>
-Path found: ['A', 'E', 'D', 'G']
+## OUTPUT
+
+<img width="440" height="509" alt="image" src="https://github.com/user-attachments/assets/345b51cd-feb8-4a99-9ada-ed9a40a18ff1" />
+
+<h2> Result : </h2>
+Thus, the Simple Hill Climbing Algorithm was implemented and a string was generated by mutating a single character at each iteration successfully.
